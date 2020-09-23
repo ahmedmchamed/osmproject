@@ -24,27 +24,23 @@ vector<int> ParseLine(string line) {
     while(lineToParse >> number >> comma && comma == ',') {
         ivec.push_back(number);
     }
-
     return ivec;
 }
 
-void ReadBoardFile() {
+vector<vector<int>> ReadBoardFile() {
     ifstream boardFile;
     boardFile.open(fileName::boardFileName);
-    vector<int> ivec;
+    
+    vector<vector<int>> ivec;
 
     if (boardFile) {
         cout << "Board file successfully opened" << std::endl;
         string line;
         while(getline(boardFile, line)) {
-            // cout << line << std::endl;
-            ivec = ParseLine(line);
+            ivec.push_back(ParseLine(line));
         }
     }
-
-    for (auto i : ivec) {
-        cout << i << std::endl;
-    }
+    return ivec;
 }
 
 void PrintBoard(const vector<vector<int>> &board) {
