@@ -31,16 +31,16 @@ vector<vector<int>> ReadBoardFile() {
     ifstream boardFile;
     boardFile.open(fileName::boardFileName);
     
-    vector<vector<int>> ivec;
+    vector<vector<int>> gridRow;
 
     if (boardFile) {
         cout << "Board file successfully opened" << std::endl;
         string line;
         while(getline(boardFile, line)) {
-            ivec.push_back(ParseLine(line));
+            gridRow.push_back(ParseLine(line));
         }
     }
-    return ivec;
+    return gridRow;
 }
 
 void PrintBoard(const vector<vector<int>> &board) {
