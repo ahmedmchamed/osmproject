@@ -17,34 +17,41 @@ namespace obstacles {
     enum class State {kEmpty, kObstacle};
 }
 
-vector<int> ParseLine(string line) {
+vector<obstacles::State> ParseLine(string line) {
     istringstream lineToParse(line);
 
-    vector<int> ivec;
+    vector<obstacles::State> stateVec;
 
     int number = 0;
     char comma = '0';
 
     while(lineToParse >> number >> comma && comma == ',') {
-        ivec.push_back(number);
+        switch(number) {
+            case 0: stateVec.push_back(obstacles::State::kEmpty);
+            break;
+            case 1: stateVec.push_back(obstacles::State::kObstacle);
+            break;
+            default: cout << "Invalid data to push back";
+            break; 
+        }
     }
-    return ivec;
+    return stateVec;
 }
 
-vector<vector<int>> ReadBoardFile() {
+vector<vector<obstacles::State>> ReadBoardFile() {
     ifstream boardFile;
     boardFile.open(fileName::boardFileName);
     
-    vector<vector<int>> gridRow;
+    vector<vector<obstacles::State>> grid;
 
     if (boardFile) {
         cout << "Board file successfully opened" << std::endl;
         string line;
         while(getline(boardFile, line)) {
-            gridRow.push_back(ParseLine(line));
+            grid.push_back(ParseLine(line));
         }
     }
-    return gridRow;
+    return grid;
 }
 
 void PrintBoard(const vector<vector<int>> &board) {
