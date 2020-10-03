@@ -13,6 +13,10 @@ namespace fileName {
     string boardFileName = "1.board";
 }
 
+namespace obstacles {
+    enum class State {kEmpty, kObstacle};
+}
+
 vector<int> ParseLine(string line) {
     istringstream lineToParse(line);
 
@@ -51,6 +55,8 @@ void PrintBoard(const vector<vector<int>> &board) {
         cout << std::endl;
     }
 }
+
+void CellString
 
 int main() {
 
