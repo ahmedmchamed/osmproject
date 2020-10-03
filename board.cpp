@@ -38,9 +38,9 @@ vector<obstacles::State> ParseLine(string line) {
     return stateVec;
 }
 
-vector<vector<obstacles::State>> ReadBoardFile() {
+vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
     ifstream boardFile;
-    boardFile.open(fileName::boardFileName);
+    boardFile.open(filePath);
     
     vector<vector<obstacles::State>> grid;
 
@@ -54,15 +54,6 @@ vector<vector<obstacles::State>> ReadBoardFile() {
     return grid;
 }
 
-void PrintBoard(const vector<vector<int>> &board) {
-    for(const auto &row : board) {
-        for(const auto &number : row) {
-            cout << number;
-        }
-        cout << std::endl;
-    }
-}
-
 string CellString(obstacles::State state) {
     if (state == obstacles::State::kEmpty) {
         return "0 ";
@@ -72,17 +63,25 @@ string CellString(obstacles::State state) {
     }
 }
 
+void PrintBoard(const vector<vector<obstacles::State>> &board) {
+    for(const auto &row : board) {
+        for(const auto &number : row) {
+            cout << CellString(number);
+        }
+        cout << std::endl;
+    }
+}
+
 int main() {
 
-    vector<vector<int>> board{
-        {0, 1, 0, 0, 0, 0},
-        {0, 1, 0, 0, 0, 0},
-        {0, 1, 0, 0, 0, 0},
-        {0, 1, 0, 0, 0, 0},
-        {0, 0, 0, 0, 1, 0}
-    };
+    auto boardGrid = ReadBoardFile(fileName::boardFileName);
+    // vector<vector<int>> board{
+    //     {0, 1, 0, 0, 0, 0},
+    //     {0, 1, 0, 0, 0, 0},
+    //     {0, 1, 0, 0, 0, 0},
+    //     {0, 1, 0, 0, 0, 0},
+    //     {0, 0, 0, 0, 1, 0}
+    // };
 
-    PrintBoard(board);
-
-    ReadBoardFile();
+    PrintBoard(boardGrid);
 }
