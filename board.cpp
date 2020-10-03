@@ -56,7 +56,14 @@ void PrintBoard(const vector<vector<int>> &board) {
     }
 }
 
-void CellString
+string CellString(obstacles::State state) {
+    if (state == obstacles::State::kEmpty) {
+        return "0 ";
+    }
+    if (state == obstacles::State::kObstacle) {
+        return "⛰️ ";
+    }
+}
 
 int main() {
 
