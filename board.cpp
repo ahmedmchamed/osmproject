@@ -28,11 +28,11 @@ vector<obstacles::State> ParseLine(string line) {
     while(lineToParse >> number >> comma && comma == ',') {
         switch(number) {
             case 0: stateVec.push_back(obstacles::State::kEmpty);
-            break;
+                break;
             case 1: stateVec.push_back(obstacles::State::kObstacle);
-            break;
+                break;
             default: cout << "Invalid data to push back";
-            break; 
+                break; 
         }
     }
     return stateVec;
