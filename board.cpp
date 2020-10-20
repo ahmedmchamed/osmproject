@@ -54,6 +54,12 @@ vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
     return grid;
 }
 
+int Heuristic(int x1, int y1, int x2, int y2) {
+    int result = std::abs(x2 -x1) + std::abs(y2 - y1);
+
+    return result;
+}
+
 vector<vector<obstacles::State>> Search(vector<vector<obstacles::State>> grid, int *start, int *end) {
     cout << "No path found!" << std::endl;
     vector<vector<obstacles::State>> emptyGrid{};
