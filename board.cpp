@@ -14,10 +14,11 @@ namespace fileName {
 }
 
 namespace obstacles {
-    enum class State {kEmpty, kObstacle};
+    enum class State {kEmpty, kObstacle, kClosed};
 }
 
 vector<obstacles::State> ParseLine(string line) {
+
     istringstream lineToParse(line);
 
     vector<obstacles::State> stateVec;
@@ -39,6 +40,7 @@ vector<obstacles::State> ParseLine(string line) {
 }
 
 vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
+
     ifstream boardFile;
     boardFile.open(filePath);
     
@@ -55,12 +57,18 @@ vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
 }
 
 int Heuristic(int x1, int y1, int x2, int y2) {
+
     int result = std::abs(x2 -x1) + std::abs(y2 - y1);
 
     return result;
 }
 
-vector<vector<obstacles::State>> Search(vector<vector<obstacles::State>> grid, int *start, int *end) {
+vector<vector<obstacles::State>> Search(
+
+    vector<vector<obstacles::State>> grid, 
+    int *start, 
+    int *end) {
+    
     cout << "No path found!" << std::endl;
     vector<vector<obstacles::State>> emptyGrid{};
 
@@ -68,6 +76,7 @@ vector<vector<obstacles::State>> Search(vector<vector<obstacles::State>> grid, i
 }
 
 string CellString(obstacles::State state) {
+
     if (state == obstacles::State::kEmpty) {
         return "0 ";
     }
@@ -78,13 +87,29 @@ string CellString(obstacles::State state) {
     return string();
 }
 
-void PrintBoard(const vector<vector<obstacles::State>> &board) {
-    for(const auto &row : board) {
+void PrintBoard(const vector<vector<obstacles::State>> &grid) {
+
+    for(const auto &row : grid) {
         for(const auto &number : row) {
             cout << CellString(number);
         }
         cout << std::endl;
     }
+}
+
+void AddToOpen(
+    int x, 
+    int y, 
+    int g, 
+    int h, 
+    vector<vector<int>> &openNodes, 
+    vector<vector<obstacles::State>> &grid) {
+
+        vector<int> node{x, y, g, h};
+
+        openNodes.push_back(node);
+
+        grid[x][y] = obstacles::State::kClosed;
 }
 
 int main() {
