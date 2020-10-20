@@ -54,6 +54,13 @@ vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
     return grid;
 }
 
+vector<vector<obstacles::State>> Search(vector<vector<obstacles::State>> grid, int *start, int *end) {
+    cout << "No path found!" << std::endl;
+    vector<vector<obstacles::State>> emptyGrid{};
+
+    return emptyGrid;
+}
+
 string CellString(obstacles::State state) {
     if (state == obstacles::State::kEmpty) {
         return "0 ";
@@ -61,6 +68,8 @@ string CellString(obstacles::State state) {
     if (state == obstacles::State::kObstacle) {
         return "⛰️ ";
     }
+
+    return string();
 }
 
 void PrintBoard(const vector<vector<obstacles::State>> &board) {
@@ -74,6 +83,9 @@ void PrintBoard(const vector<vector<obstacles::State>> &board) {
 
 int main() {
 
+    int start[2]{0, 0};
+    int goal[2]{4, 5};
+
     auto boardGrid = ReadBoardFile(fileName::boardFileName);
     // vector<vector<int>> board{
     //     {0, 1, 0, 0, 0, 0},
@@ -83,5 +95,8 @@ int main() {
     //     {0, 0, 0, 0, 1, 0}
     // };
 
-    PrintBoard(boardGrid);
+    vector<vector<obstacles::State>> solution  = Search(boardGrid,start, goal);
+
+    PrintBoard(solution);
+    
 }
