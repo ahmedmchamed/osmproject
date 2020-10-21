@@ -122,6 +122,10 @@ vector<vector<obstacles::State>> Search(
         return emptyGrid;
 }
 
+bool Compare(vector<int> node, vector<int> neighbourNode) {
+    return node[2] + node[3] > neighbourNode[2] + neighbourNode[3];
+}
+
 int main() {
 
     int start[2]{0, 0};
