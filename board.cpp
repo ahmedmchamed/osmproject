@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <iterator>
 
 using std::cout;
 using std::string;
@@ -63,18 +64,6 @@ int Heuristic(int x1, int y1, int x2, int y2) {
     return result;
 }
 
-vector<vector<obstacles::State>> Search(
-
-    vector<vector<obstacles::State>> grid, 
-    int *start, 
-    int *end) {
-    
-    cout << "No path found!" << std::endl;
-    vector<vector<obstacles::State>> emptyGrid{};
-
-    return emptyGrid;
-}
-
 string CellString(obstacles::State state) {
 
     if (state == obstacles::State::kEmpty) {
@@ -110,6 +99,27 @@ void AddToOpen(
         openNodes.push_back(node);
 
         grid[x][y] = obstacles::State::kClosed;
+}
+
+vector<vector<obstacles::State>> Search(
+    vector<vector<obstacles::State>> grid, 
+    int *initNode, 
+    int *goalNode) {
+
+        vector<vector<int>> openNodes{};
+
+        int xInit = initNode[0];
+        int yInit = initNode[1];
+        int xGoal = goalNode[0];
+        int yGoal = goalNode[1];
+        int g = 0;
+        int h = Heuristic(xInit, yInit, xGoal, yGoal);
+
+        AddToOpen(xInit, yInit, g, h, openNodes, grid);
+
+        cout << "No path found!" << std::endl;
+        vector<vector<obstacles::State>> emptyGrid{};
+        return emptyGrid;
 }
 
 int main() {
