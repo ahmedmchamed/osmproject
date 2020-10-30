@@ -3,7 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <iterator>
+#include <algorithm>
 
+using std::sort;
 using std::cout;
 using std::string;
 using std::vector;
@@ -14,24 +16,24 @@ namespace fileName {
     string boardFileName = "1.board";
 }
 
-namespace obstacles {
-    enum class State {kEmpty, kObstacle, kClosed};
+namespace pathFeatures {
+    enum class State {kEmpty, kObstacle, kClosed, kPath};
 }
 
-vector<obstacles::State> ParseLine(string line) {
+vector<pathFeatures::State> ParseLine(string line) {
 
     istringstream lineToParse(line);
 
-    vector<obstacles::State> stateVec;
+    vector<pathFeatures::State> stateVec;
 
     int number = 0;
     char comma = '0';
 
     while(lineToParse >> number >> comma && comma == ',') {
         switch(number) {
-            case 0: stateVec.push_back(obstacles::State::kEmpty);
+            case 0: stateVec.push_back(pathFeatures::State::kEmpty);
                 break;
-            case 1: stateVec.push_back(obstacles::State::kObstacle);
+            case 1: stateVec.push_back(pathFeatures::State::kObstacle);
                 break;
             default: cout << "Invalid data to push back";
                 break; 
@@ -40,12 +42,16 @@ vector<obstacles::State> ParseLine(string line) {
     return stateVec;
 }
 
-vector<vector<obstacles::State>> ReadBoardFile(string filePath) {
+bool Compare(vector<int> node, vector<int> neighbourNode) {
+    return node[2] + node[3] > neighbourNode[2] + neighbourNode[3];
+}
+
+vector<vector<pathFeatures::State>> ReadBoardFile(string filePath) {
 
     ifstream boardFile;
     boardFile.open(filePath);
     
-    vector<vector<obstacles::State>> grid;
+    vector<vector<pathFeatures::State>> grid;
 
     if (boardFile) {
         cout << "Board file successfully opened" << std::endl;
@@ -64,19 +70,19 @@ int Heuristic(int x1, int y1, int x2, int y2) {
     return result;
 }
 
-string CellString(obstacles::State state) {
+string CellString(pathFeatures::State state) {
 
-    if (state == obstacles::State::kEmpty) {
+    if (state == pathFeatures::State::kEmpty) {
         return "0 ";
     }
-    if (state == obstacles::State::kObstacle) {
+    if (state == pathFeatures::State::kObstacle) {
         return "⛰️ ";
     }
 
     return string();
 }
 
-void PrintBoard(const vector<vector<obstacles::State>> &grid) {
+void PrintBoard(const vector<vector<pathFeatures::State>> &grid) {
 
     for(const auto &row : grid) {
         for(const auto &number : row) {
@@ -92,17 +98,17 @@ void AddToOpen(
     int g, 
     int h, 
     vector<vector<int>> &openNodes, 
-    vector<vector<obstacles::State>> &grid) {
+    vector<vector<pathFeatures::State>> &grid) {
 
         vector<int> node{x, y, g, h};
 
         openNodes.push_back(node);
 
-        grid[x][y] = obstacles::State::kClosed;
+        grid[x][y] = pathFeatures::State::kClosed;
 }
 
-vector<vector<obstacles::State>> Search(
-    vector<vector<obstacles::State>> grid, 
+vector<vector<pathFeatures::State>> Search(
+    vector<vector<pathFeatures::State>> grid, 
     int *initNode, 
     int *goalNode) {
 
@@ -117,13 +123,25 @@ vector<vector<obstacles::State>> Search(
 
         AddToOpen(xInit, yInit, g, h, openNodes, grid);
 
-        cout << "No path found!" << std::endl;
-        vector<vector<obstacles::State>> emptyGrid{};
-        return emptyGrid;
-}
+        while (openNodes.begin() != openNodes.end()) {
+            sort(openNodes.begin(), openNodes.end(), Compare);
 
-bool Compare(vector<int> node, vector<int> neighbourNode) {
-    return node[2] + node[3] > neighbourNode[2] + neighbourNode[3];
+            auto currentNode = openNodes.back();
+            openNodes.pop_back();
+
+            int xCurrent = currentNode[0];
+            int yCurrent = currentNode[1];
+            grid[xCurrent][yCurrent] = pathFeatures::State::kPath;
+
+            if (xCurrent == goalNode[0] && yCurrent == goalNode[1]) {
+                return grid;
+            }
+
+        }
+
+        cout << "No path found!" << std::endl;
+        vector<vector<pathFeatures::State>> emptyGrid{};
+        return emptyGrid;
 }
 
 int main() {
@@ -140,7 +158,7 @@ int main() {
     //     {0, 0, 0, 0, 1, 0}
     // };
 
-    vector<vector<obstacles::State>> solution  = Search(boardGrid,start, goal);
+    vector<vector<pathFeatures::State>> solution  = Search(boardGrid,start, goal);
 
     PrintBoard(solution);
     
