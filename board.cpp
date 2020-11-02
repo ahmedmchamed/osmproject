@@ -18,7 +18,11 @@ namespace fileName {
 
 namespace pathFeatures {
     enum class State {kEmpty, kObstacle, kClosed, kPath};
-}
+
+namespace directionDeltas {
+    const int delta[4][2] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+} 
+
 
 vector<pathFeatures::State> ParseLine(string line) {
 
@@ -40,6 +44,17 @@ vector<pathFeatures::State> ParseLine(string line) {
         }
     }
     return stateVec;
+}
+
+bool CheckValidCell(int xValue, int yValue, vector<vector<pathFeatures::State>> &grid) {
+    if (grid.begin() != grid.end()) {
+        if (xValue > 0 && xValue < grid.size()) {
+            if (yValue > 0 && yValue < grid[xValue].size()) {
+                return grid[xValue][yValue] == pathFeatures::State::kEmpty;
+            }
+        }
+        return false;
+    }
 }
 
 bool Compare(vector<int> node, vector<int> neighbourNode) {
@@ -142,6 +157,19 @@ vector<vector<pathFeatures::State>> Search(
         cout << "No path found!" << std::endl;
         vector<vector<pathFeatures::State>> emptyGrid{};
         return emptyGrid;
+}
+
+void ExpandNeighbours(
+    const vector<int> &currentNode,
+    const vector<vector<int>> &openNodes,
+    const vector<vector<pathFeatures::State>> &grid,
+    int *globalCoords) {
+
+        int xNodeValue = currentNode[0];
+        int yNodeValue = currentNode[1];
+
+
+
 }
 
 int main() {
