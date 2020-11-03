@@ -88,14 +88,23 @@ int Heuristic(int x1, int y1, int x2, int y2) {
 
 string CellString(pathFeatures::State state) {
 
-    if (state == pathFeatures::State::kEmpty) {
-        return "0 ";
+    switch(state) {
+        case pathFeatures::State::kEmpty: 
+            return "0 ";
+            break;
+        case pathFeatures::State::kObstacle:
+            return "⛰️ ";
+            break;
+        case pathFeatures::State::kStart:
+            return "🚦 ";
+            break;
+        case pathFeatures::State::kFinish:
+            return "🏁 ";
+            break;
+        default: 
+            return string();
+            break;
     }
-    if (state == pathFeatures::State::kObstacle) {
-        return "⛰️ ";
-    }
-
-    return string();
 }
 
 void PrintBoard(const vector<vector<pathFeatures::State>> &grid) {
