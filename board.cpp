@@ -17,10 +17,11 @@ namespace fileName {
 }
 
 namespace pathFeatures {
-    enum class State {kEmpty, kObstacle, kClosed, kPath};
+    enum class State {kStart, kEmpty, kObstacle, kClosed, kPath, kFinish};
+}
 
 namespace directionDeltas {
-    const int delta[4][2] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+    const int delta[4][2]{{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 } 
 
 
@@ -53,8 +54,8 @@ bool CheckValidCell(int xValue, int yValue, vector<vector<pathFeatures::State>> 
                 return grid[xValue][yValue] == pathFeatures::State::kEmpty;
             }
         }
-        return false;
     }
+    return false;
 }
 
 bool Compare(vector<int> node, vector<int> neighbourNode) {
@@ -149,7 +150,8 @@ vector<vector<pathFeatures::State>> Search(
             grid[xCurrent][yCurrent] = pathFeatures::State::kPath;
 
             if (xCurrent == goalNode[0] && yCurrent == goalNode[1]) {
-                return grid;
+                grid[initNode[0]][initNode[1]] = pathFeatures::State::kStart;
+                grid[goalNode[0]][goalNode[1]] = pathFeatures::State::kFinish;
             }
 
         }
@@ -161,14 +163,26 @@ vector<vector<pathFeatures::State>> Search(
 
 void ExpandNeighbours(
     const vector<int> &currentNode,
-    const vector<vector<int>> &openNodes,
-    const vector<vector<pathFeatures::State>> &grid,
-    int *globalCoords) {
+    vector<vector<int>> &openNodes,
+    vector<vector<pathFeatures::State>> &grid,
+    int *goalCoords) {
 
-        int xNodeValue = currentNode[0];
-        int yNodeValue = currentNode[1];
+        int xNode = currentNode[0];
+        int yNode = currentNode[1];
+        int gNode = currentNode[2];
+        int hNode = currentNode[3];
 
+        for (int i = 0; i < 4; i++) {
+            int xNeighbour = xNode + directionDeltas::delta[i][0];
+            int yNeighbour = yNode + directionDeltas::delta[i][1];
 
+            if (CheckValidCell(xNeighbour, yNeighbour, grid)) {
+                int gNeighbour = ++gNode;
+                int hNeighbour = Heuristic(xNeighbour, yNeighbour, goalCoords[0], goalCoords[1]);
+
+                AddToOpen(xNeighbour, yNeighbour, gNeighbour, hNeighbour, openNodes, grid);
+            }
+        }
 
 }
 
