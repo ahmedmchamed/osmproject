@@ -16,7 +16,7 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
 #setting the IO2D flags
 add_subdirectory(thirdparty/P0267_RefImpl)
-add_library(io2d::io2d ALIAS io2d)
+add_library(io2d::io2d ALIAS io2d.h)
 
 find_package(Cairo)
 find_package(GraphicsMagick)
