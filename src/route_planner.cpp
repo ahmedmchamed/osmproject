@@ -52,12 +52,14 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
 
-    while (current_node->parent != 0) {
-
-        path_found.push_back(*current_node);
-        float node_to_parent_distance = current_node->distance(*current_node->parent);
-
-        distance += node_to_parent_distance;
+    while (current_node->parent) {
+      
+      distance += current_node->distance(*current_node->parent);
+      
+      path_found.push_back(*current_node);
+     
+      current_node = current_node->parent;
+      
     }
 
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
